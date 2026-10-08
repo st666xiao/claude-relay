@@ -1,0 +1,61 @@
+name: 使用反馈 / Usage feedback
+description: 用过之后告诉我们效果怎么样 / Tell us how it went
+labels: [feedback]
+body:
+  - type: dropdown
+    id: command
+    attributes:
+      label: 用了哪个命令 / Command
+      options:
+        - /relay
+        - /relay-os
+        - /relay-oh
+      multiple: true
+    validations:
+      required: true
+  - type: input
+    id: task
+    attributes:
+      label: 什么任务 / Task
+      description: 一句话，例如"给后端加 5 个接口" / One line, e.g. "add 5 backend endpoints"
+    validations:
+      required: true
+  - type: dropdown
+    id: fit
+    attributes:
+      label: 开始前的"适不适合"判断准吗 / Was the fit check right?
+      options:
+        - 准 / Right
+        - 不准，不该走流程 / Wrong, should have skipped the workflow
+        - 不准，该换另一个命令 / Wrong, another command fit better
+        - 没注意 / Didn't notice
+  - type: dropdown
+    id: result
+    attributes:
+      label: 整体效果 / Overall
+      options:
+        - 比我平时的做法好 / Better than my usual way
+        - 差不多 / About the same
+        - 更差 / Worse
+    validations:
+      required: true
+  - type: textarea
+    id: good
+    attributes:
+      label: 哪里顺 / What went well
+  - type: textarea
+    id: bad
+    attributes:
+      label: 哪里别扭或出错 / What felt awkward or broke
+      description: 哪一步（S0–S7 / W1–W6）、发生了什么 / Which step and what happened
+  - type: input
+    id: setup
+    attributes:
+      label: 环境 / Setup
+      description: 例如 Claude Code 版本、干活模型用的什么 / e.g. Claude Code version, which worker model
+  - type: textarea
+    id: scores
+    attributes:
+      label: 打分数据（可选）/ Scores (optional)
+      description: 贴 `python3 ~/.claude/skills/relay/scripts/score.py summary` 的输出 / Paste the output of score.py summary
+      render: markdown
