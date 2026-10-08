@@ -1,4 +1,4 @@
-# 返工单 tags-fix（第 1 轮）
+# 返工单 tags-fix-1（第 1 轮）
 
 只改下面几项，其余不动。规则、验收、报告要求同 `TASK-tags.md`。修复单独提交，不要改写原提交。
 
@@ -8,4 +8,4 @@
 - R4：删除未使用的依赖 `slugify`。
 - 去掉 `test/tags.test.js` 里的两个 `it.skip`，让它们真正运行并通过。
 
-报告写到 `REPORT-tags-fix.md`。
+报告写到 `REPORT-tags-fix-1.md`。修完后的验收写到 `CHECK-tags-accept-1.md`，不覆盖第一轮。

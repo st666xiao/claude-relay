@@ -25,7 +25,8 @@ skipped: test/tags.test.js "cascade on bookmark delete" (it.skip)
 ```
 
 ## 任务书没提到但被改动的文件
-- `package-lock.json`（新增依赖 `slugify`）
+（`git diff --stat 9f3e2a1..HEAD`）
+- `package.json`、`package-lock.json`（新增依赖 `slugify`）
 
 ## 被改动的受保护文件
 无。

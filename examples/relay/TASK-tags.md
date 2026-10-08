@@ -2,6 +2,7 @@
 
 ## 前提
 - 项目目录 `/home/dev/bookmarks-api`。`npm install && npm run migrate && npm test`。
+- 基线提交：`9f3e2a1`（写任务书时的 `git rev-parse HEAD`）。
 - 依赖注入：`createApp({ db, clock })`（`src/app.js`）。不要绕开它直接用全局数据库连接。
 
 ## 范围

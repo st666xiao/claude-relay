@@ -13,6 +13,6 @@
 | S3 执行者报告 | [relay/REPORT-tags.md](relay/REPORT-tags.md) |
 | S4 机械验收 | [relay/CHECK-tags-accept.md](relay/CHECK-tags-accept.md) |
 | S5 审查 | [relay/REVIEW-tags.md](relay/REVIEW-tags.md) |
-| S6 返工单 | [relay/TASK-tags-fix.md](relay/TASK-tags-fix.md) |
+| S6 返工单 | [relay/TASK-tags-fix-1.md](relay/TASK-tags-fix-1.md) |
 | S7 汇报 + S8 打分 | [relay/07-report-and-score.md](relay/07-report-and-score.md) |
 | `/relay-oh` 拆分和给 Haiku 的说明 | [relay-oh/SWARM-alt-text.md](relay-oh/SWARM-alt-text.md) |

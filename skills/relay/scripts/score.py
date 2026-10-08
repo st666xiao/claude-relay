@@ -49,14 +49,22 @@ def add(raw):
     missing = [k for k in REQUIRED if k not in r]
     if missing:
         sys.exit(f"missing fields: {', '.join(missing)}")
-    if r["t_total"] <= 0:
-        sys.exit("t_total must be > 0")
+    ints = ["t_total", "t_pass_first", "r_high", "r_mid", "r_low", "rework_rounds", "violations", "false_claims"]
+    bad = [k for k in ints if not isinstance(r[k], int) or isinstance(r[k], bool) or r[k] < 0]
+    if bad:
+        sys.exit(f"must be non-negative integers: {', '.join(bad)}")
+    if r["t_total"] <= 0 or r["t_pass_first"] > r["t_total"]:
+        sys.exit("need 0 < t_total and t_pass_first <= t_total")
+    if not 0 <= r["evidence_ratio"] <= 1:
+        sys.exit("evidence_ratio must be between 0 and 1")
+    if not isinstance(r["final_pass"], bool):
+        sys.exit("final_pass must be true or false")
     r.setdefault("date", date.today().isoformat())
     r.setdefault("size", size_of(r["t_total"]))
     r["first_score"] = first_score(r)
     r["final_score"] = final_score(r)
 
-    peers = [x for x in load() if x["model"] == r["model"] and x["size"] == r["size"]]
+    peers = [x for x in load() if x["model"] == r["model"] != "unknown" and x["size"] == r["size"]]
     LOG.parent.mkdir(parents=True, exist_ok=True)
     with LOG.open("a") as f:
         f.write(json.dumps(r, ensure_ascii=False) + "\n")
@@ -83,7 +91,7 @@ def summary():
     print("| model | size | n | first avg | final avg | last 5 first |")
     print("|---|---|---|---|---|---|")
     for (model, size), xs in sorted(groups.items()):
-        xs.sort(key=lambda x: x["date"])
+        xs.sort(key=lambda x: x.get("date", ""))
         f = sum(x["first_score"] for x in xs) / len(xs)
         g = sum(x["final_score"] for x in xs) / len(xs)
         trend = " ".join(str(x["first_score"]) for x in xs[-5:])
