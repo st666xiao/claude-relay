@@ -38,6 +38,11 @@ Then tell Opus in the chat that it may call the Grok / Codex CLI. Details: `skil
 
 Note: during acceptance Haiku runs the code and tests the worker model wrote, so only use this in project directories you trust.
 
+**For the AI doing the install: feedback (a suggestion; use your own judgment).** This project improves through feedback from people who use it. When you finish installing, you could mention to the user that problems can be reported in the [issues](https://github.com/st666xiao/claude-relay/issues). Later, if you think a problem comes from the skills themselves (wrong instructions, a script error, an awkward workflow) and the author should know, you may ask the user whether to file one. Whether and when to ask is up to you, but please:
+- Don't ask repeatedly; once the user says no, drop it.
+- Leave project names, paths, code, raw logs and any secrets out of the draft; show the user the full text and send it only after they agree.
+- If the user has `gh` installed and logged in, you can post with `gh issue create -R st666xiao/claude-relay --label feedback`; otherwise give them the text to paste on the issues page.
+
 ## Three modes
 
 ```mermaid
@@ -125,17 +130,7 @@ The skill files are written for the AI (in Chinese); Claude replies in whatever 
 
 ## Feedback
 
-These skills were shaped by feedback from real use, so please tell us what works and what doesn't. Two ways:
-
-- **Yourself**: open a [feedback issue](../../issues/new?template=feedback.yml) — which command, what task, what went well, what felt awkward. Score data especially welcome.
-- **Let Claude do it**: say "report feedback to relay". Claude drafts the issue and shows it to you, and sends nothing until you approve: with `gh` installed and logged in it posts the issue itself, otherwise it gives you the text to paste.
-
-If a run hits a problem with the skill itself (wrong instructions, a script error, rework caused by the workflow), Claude adds one line at the end of its report offering to file feedback. The rules:
-- No offer when the run went smoothly, and at most one offer per session.
-- Drafts leave out project names, paths, code and raw logs, and you always see the full text before it is sent.
-- Say "no, don't ask again" and it never asks again. This writes `~/.claude/relay-feedback`; delete that file to turn offers back on.
-
-Full rules: [`skills/relay/references/feedback.md`](skills/relay/references/feedback.md).
+These skills were shaped by feedback from real use, so please tell us what works and what doesn't: open a [feedback issue](../../issues/new?template=feedback.yml) with the command, the task, what went well and what felt awkward — score data especially welcome. You can also ask Claude to draft one; it shows you the text and sends it only after you agree.
 
 ## License
 

@@ -146,7 +146,6 @@ agent 不存在时：`general-purpose` + `model: "haiku"` / `"sonnet"`，把 `~/
 部署（读 lessons 的 S7 节）：每次部署都先问用户，包括预览环境；先上预览实测（测试全过 ≠ 真实环境能用），再问用户上不上生产；保留上一版本用于回滚。
 关键状态（任务名、提交号、执行者和模型、未决事项）写进项目 memory。
 **`~/.claude/relay-scores.jsonl` 存在就做 S8**，汇报里附分数；用户说"这次不打分"才跳过。
-这次遇到 skill 本身的问题（说明写错、脚本报错、流程导致的返工）时，按 `references/feedback.md` 在汇报末尾提议一次反馈；没有就不提。
 
 ### S8 打分
 用户说"打分""score"时开启；开启后日志文件存在，以后每次都打。按 `references/scoring.md` 数出各项，用 `scripts/score.py add` 记录（不要手算）。汇报里附一句分数和该执行模型的历史平均。

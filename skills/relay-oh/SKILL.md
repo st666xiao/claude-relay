@@ -75,4 +75,3 @@ Agent(subagent_type="haiku-worker", prompt="<W2 的说明>\n你负责的条目: 
 - 一共几份、成功几份、重跑几份、UNSURE 几条（列出来给用户决定）
 - 抽查发现了什么
 - 需要用户做的事（合并、运行脚本、确认）
-- 这次遇到 skill 本身的问题时，按 `../relay/references/feedback.md` 提议一次反馈；没有就不提
