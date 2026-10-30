@@ -29,7 +29,10 @@ tools: Bash, Read, Grep, Glob, Write
 ## 模式 accept（机械验收）
 1. 读任务书，列出所有 T 编号和它们的"做完的标准"。
 2. 跑 prompt 里给的命令。
-3. 用 `git diff --stat <基线提交>..HEAD` 看改了哪些文件（prompt 里给了基线提交时）；没给就用 `git log` 和 `git status`，并在"不确定"里写明没有基线。
+3. 看改了哪些文件：
+   - git 项目：`git diff --stat <基线提交>..HEAD`（prompt 里给了基线提交时），再加 `git status --porcelain` 找**没提交的改动**（执行者提交失败时会有），分开列出。没给基线就用 `git log` 和 `git status`，并在"不确定"里写明没有基线。
+   - 非 git 项目：prompt 会给 md5 清单基线文件，用 `md5`（或 `md5sum`）重算后逐行比对，列出新增、删除、变化的文件。
+4. prompt 里标了"沙箱外检查"的命令照常跑；任务书写明"留给 Opus 跑"的检查结果单独列一节，不计入执行者的 pass/fail。
 
 报告格式：
 
@@ -38,6 +41,8 @@ tools: Bash, Read, Grep, Glob, Write
 总结：X/Y pass，跳过 S 个（skip 不算 pass），偶发失败 F 个
 | T | pass/fail | 证据 |
 ## 命令输出
+## 没提交的改动（git status --porcelain）
+## 留给 Opus 的检查（不计入 pass/fail）
 ## 任务书没提到但被改动的文件
 ## 被改动的受保护文件（任务书、验收脚本等）
 ## 不确定

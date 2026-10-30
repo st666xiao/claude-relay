@@ -9,7 +9,8 @@ description: 不交给外部模型（Codex、DeepSeek、GLM 等）的内部接�
 
 **第一步：读 `../relay/references/fit-check.md`，判断任务适不适合走流程，给用户反馈，等回复再开始。**
 
-步骤、文件命名、S4/S5 的判断条件、S7、S8 都和 `../relay/SKILL.md` 相同，先读它。本文件只写不同的地方。
+步骤、文件命名、S1/S2 要点（领域事实假设、验收脚本空跑）、验收深度、S4/S5 的判断条件、S6 每轮验收、S7、S8 都和 `../relay/SKILL.md` 相同，先读它。本文件只写不同的地方。
+本流程只用 Claude 内部模型；Grok、Codex 等外部执行者走 `/relay`（打分也记 `workflow: relay`）。`/relay` 里换执行者换成 Sonnet 时，用下面 S3 的写法。
 规则 `../relay/references/lessons.md`、任务书清单 `../relay/references/task-template.md`。
 
 ## 角色
@@ -34,12 +35,12 @@ S3 的 Sonnet 在独立 worktree 里工作，worktree 从**当前提交**创建�
 
 ### S3 Sonnet 实现
 ```
-Agent(model="sonnet", subagent_type="general-purpose", isolation="worktree", prompt="读 TASK-<name>.md 并按它完成全部 T。做完写 REPORT-<name>.md：每个 T 改了什么、提交号、证据、拿不准的地方。遵守任务书的规则部分。最后告诉我你的 worktree 路径和分支名。")
+Agent(model="sonnet", subagent_type="general-purpose", isolation="worktree", prompt="读 TASK-<name>.md 并按它完成全部 T。做完写 REPORT-<name>.md：开头写明模型，每个 T 改了什么、提交号、证据、拿不准的地方。遵守任务书的规则部分。最后告诉我你的 worktree 路径和分支名。")
 ```
 任务书分段的，一段一个调用，每段过了 S4 再做下一段。
 
 ### S4 Haiku 验收
-同 `/relay`，但 prompt 里加 `工作目录: <Sonnet 的 worktree 路径>`，让 Haiku 在那里跑。
+同 `/relay`（含验收深度分档：小活你自己跑脚本即可），但 prompt 里加 `工作目录: <Sonnet 的 worktree 路径>`，让 Haiku 在那里跑。
 
 ### S5 Opus 审查 → `REVIEW-<name>*.md`
 你自己读 diff（`git diff <基线>..<Sonnet 分支>`）、任务书、Sonnet 报告、Haiku 验收报告，按 `R1…` 编号写问题（严重程度 + `file:line`）。

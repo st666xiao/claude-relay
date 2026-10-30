@@ -10,7 +10,7 @@
 flowchart LR
   subgraph R["/relay 标准版"]
     direction LR
-    r1[Opus<br/>计划 + 任务书] --> r2[外部干活模型<br/>Codex / DeepSeek / GLM…] --> r3[Haiku<br/>跑验收] --> r4[Sonnet<br/>审查] --> r5[Opus<br/>汇报]
+    r1[Opus<br/>计划 + 任务书] --> r2[外部干活模型<br/>Grok / Codex / DeepSeek / GLM…] --> r3[Haiku<br/>跑验收] --> r4[Sonnet<br/>审查] --> r5[Opus<br/>汇报]
   end
   subgraph OS["/relay-os"]
     direction LR
@@ -30,7 +30,7 @@ flowchart LR
 | 适合 | 大功能 | 中等功能、多轮修改 | 量大、每份一样的小活 |
 | 用谁的额度 | 主要是外部模型 | Claude | Claude（Haiku 很省） |
 
-**外部干活模型**：要用能直接读写项目目录、运行命令的编码工具，比如 Codex desktop，或者接上 DeepSeek、GLM 的 Cursor、Cline 等。只有聊天窗口的不行。约束力强、按要求干活的模型最合适——任务书写得越具体，对模型本身能力的依赖越小。
+**外部干活模型**：要用能直接读写项目目录、运行命令的编码工具，比如 Codex desktop，或者接上 DeepSeek、GLM 的 Cursor、Cline 等。只有聊天窗口的不行。装了 Cursor CLI（Grok）或 Codex CLI 并授权后，Opus 可以用自带的 `scripts/grok.sh`、`scripts/codex.sh` 直接派活，不用你来回粘贴（说明在 `skills/relay/references/grok.md`、`codex.md`）。约束力强、按要求干活的模型最合适——任务书写得越具体，对模型本身能力的依赖越小。
 
 ## 一次 `/relay` 的过程
 

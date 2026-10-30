@@ -10,7 +10,7 @@ Make **Opus the conductor** inside Claude Code: it plans and writes the task boo
 flowchart LR
   subgraph R["/relay (standard)"]
     direction LR
-    r1[Opus<br/>plan + task book] --> r2[External worker<br/>Codex / DeepSeek / GLM…] --> r3[Haiku<br/>acceptance] --> r4[Sonnet<br/>review] --> r5[Opus<br/>report]
+    r1[Opus<br/>plan + task book] --> r2[External worker<br/>Grok / Codex / DeepSeek / GLM…] --> r3[Haiku<br/>acceptance] --> r4[Sonnet<br/>review] --> r5[Opus<br/>report]
   end
   subgraph OS["/relay-os"]
     direction LR
@@ -30,7 +30,7 @@ flowchart LR
 | Good for | Large features | Medium features, several rounds | Many small, same-shaped items |
 | Whose quota | Mostly the external model's | Claude | Claude (Haiku is cheap) |
 
-**External worker model**: use a coding tool that can read and write the project directory and run commands — Codex desktop, or Cursor, Cline and similar tools connected to DeepSeek, GLM and so on. A chat-only window won't work. Models that follow instructions tightly work best; the more specific the task book, the less the result depends on the model's own ability.
+**External worker model**: use a coding tool that can read and write the project directory and run commands — Codex desktop, or Cursor, Cline and similar tools connected to DeepSeek, GLM and so on. A chat-only window won't work. If you have the Cursor CLI (Grok) or the Codex CLI installed and allow it, Opus can dispatch work itself with the bundled `scripts/grok.sh` / `scripts/codex.sh` instead of you copy-pasting (see `skills/relay/references/grok.md` and `codex.md`). Models that follow instructions tightly work best; the more specific the task book, the less the result depends on the model's own ability.
 
 ## One `/relay` run
 

@@ -16,6 +16,7 @@
 | `t_pass_first` | 第一轮 `CHECK-<name>-accept.md`（没有 `-<k>` 后缀的那个）里 pass 的 T 数 |
 | `r_high` / `r_mid` / `r_low` | 第一份 `REVIEW-<name>.md` 里各级问题数（第一轮因全面失败跳过了审查时，用第一份出现的 REVIEW，并在 note 里写明） |
 | `rework_rounds` | `TASK-<name>-fix-<k>.md` 的数量 |
+| `rework_planner` | 其中原因是规划者（任务书 / 验收脚本错、用户后补事实）或环境（沙箱、网络）的轮数，看返工单开头的"原因"；可省略，默认 0 |
 | `violations` | 改了受保护文件 + 改了范围外文件 + 做了禁止操作（部署、push --force、碰远程机器等）的次数。范围内改动连带产生的文件（锁文件、生成文件）不算；和任务无关的改动算 |
 | `false_claims` | 报告说做了但没做、报告"全部通过"但有 skip/fail、证据对不上的次数 |
 | `evidence_ratio` | 任务书要求的证据（退出码、hash、截图、执行记录）交了几成，0～1 |
@@ -36,7 +37,7 @@
 ## 最终分（0～100）
 
 ```
-final_pass 为真：100 − 10 × rework_rounds − 15 × violations − 15 × false_claims（最低 0）
+final_pass 为真：100 − 10 × (rework_rounds − rework_planner) − 15 × violations − 15 × false_claims（最低 0）
 final_pass 为假：0
 ```
 
@@ -56,9 +57,11 @@ python3 <relay skill 目录>/scripts/score.py summary
 ```
 
 - `size`：S（≤3 个 T）/ M（4～8）/ L（>8）。分数只和同尺寸比较。
-- `model` 写执行工具里实际显示的模型名；不知道就写 `unknown`，不要猜。`unknown` 的记录不参与历史平均。
-- 开启方式：用户说"打分""score"；之后日志文件存在，每次自动打分；用户说"不打分"就跳过这次。
-- `relay-os` 也打分（executor = `claude-code`，model = Sonnet 的版本）。`relay-oh` 不打这个分。
+- `model` 写执行工具里实际显示的模型名（REPORT 开头有）；不知道就写 `unknown`，不要猜。`unknown` 的记录不参与历史平均。用户叫法会被 score.py 统一：6.1sol → `gpt-6.1-sol`，6.1terra → `gpt-6.1-terra`。Grok 写 `grok-4.7-high` 这种带档位的全名。
+- `executor` 用 `grok`（Cursor CLI）、`codex`（CLI 或 desktop）、`cursor`（Cursor 里接别的模型）、`claude-code`（Sonnet / Opus 子代理）。
+- 中途换了执行者：记首轮执行者，`note` 写"fix-k 换成 X，原因"。
+- 开启方式：用户说"打分""score"；之后日志文件存在，**S7 汇报时必须打**（实践中漏打过一批）；用户说"这次不打分"才跳过。
+- `relay-os` 也打分（executor 必须是 `claude-code`，model = Sonnet 的版本；score.py 会拒绝别的值）。Grok、Codex 跑的一律算 `workflow: relay`。`relay-oh` 不打这个分。
 
 ## 汇报和查看
 

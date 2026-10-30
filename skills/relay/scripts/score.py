@@ -19,6 +19,15 @@ REQUIRED = ["project", "task", "workflow", "executor", "model", "t_total", "t_pa
             "evidence_ratio", "final_pass"]
 
 
+# 用户叫法 → 工具里的模型名；add 写入前和 summary 分组前都会统一
+ALIASES = {"6.1sol": "gpt-6.1-sol", "6.1 sol": "gpt-6.1-sol", "sol": "gpt-6.1-sol",
+           "6.1terra": "gpt-6.1-terra", "6.1 terra": "gpt-6.1-terra", "terra": "gpt-6.1-terra"}
+
+
+def norm_model(m):
+    return ALIASES.get(str(m).strip().lower(), m)
+
+
 def size_of(t_total):
     return "S" if t_total <= 3 else "M" if t_total <= 8 else "L"
 
@@ -35,7 +44,8 @@ def first_score(r):
 def final_score(r):
     if not r["final_pass"]:
         return 0
-    return max(0, 100 - 10 * r["rework_rounds"] - 15 * r["violations"] - 15 * r["false_claims"])
+    executor_rework = r["rework_rounds"] - r.get("rework_planner", 0)
+    return max(0, 100 - 10 * executor_rework - 15 * r["violations"] - 15 * r["false_claims"])
 
 
 def load():
@@ -49,12 +59,19 @@ def add(raw):
     missing = [k for k in REQUIRED if k not in r]
     if missing:
         sys.exit(f"missing fields: {', '.join(missing)}")
-    ints = ["t_total", "t_pass_first", "r_high", "r_mid", "r_low", "rework_rounds", "violations", "false_claims"]
+    r.setdefault("rework_planner", 0)
+    ints = ["t_total", "t_pass_first", "r_high", "r_mid", "r_low", "rework_rounds", "rework_planner",
+            "violations", "false_claims"]
     bad = [k for k in ints if not isinstance(r[k], int) or isinstance(r[k], bool) or r[k] < 0]
     if bad:
         sys.exit(f"must be non-negative integers: {', '.join(bad)}")
     if r["t_total"] <= 0 or r["t_pass_first"] > r["t_total"]:
         sys.exit("need 0 < t_total and t_pass_first <= t_total")
+    if r["rework_planner"] > r["rework_rounds"]:
+        sys.exit("need rework_planner <= rework_rounds")
+    if r["workflow"] == "relay-os" and r["executor"] != "claude-code":
+        sys.exit("relay-os executor must be claude-code; external executors (grok, codex...) count as workflow relay")
+    r["model"] = norm_model(r["model"])
     if not 0 <= r["evidence_ratio"] <= 1:
         sys.exit("evidence_ratio must be between 0 and 1")
     if not isinstance(r["final_pass"], bool):
@@ -64,7 +81,7 @@ def add(raw):
     r["first_score"] = first_score(r)
     r["final_score"] = final_score(r)
 
-    peers = [x for x in load() if x["model"] == r["model"] != "unknown" and x["size"] == r["size"]]
+    peers = [x for x in load() if norm_model(x["model"]) == r["model"] != "unknown" and x["size"] == r["size"]]
     LOG.parent.mkdir(parents=True, exist_ok=True)
     with LOG.open("a") as f:
         f.write(json.dumps(r, ensure_ascii=False) + "\n")
@@ -87,7 +104,7 @@ def summary():
         return
     groups = defaultdict(list)
     for x in rows:
-        groups[(x["model"], x["size"])].append(x)
+        groups[(norm_model(x["model"]), x["size"])].append(x)
     print("| model | size | n | first avg | final avg | last 5 first |")
     print("|---|---|---|---|---|---|")
     for (model, size), xs in sorted(groups.items()):
