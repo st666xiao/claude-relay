@@ -48,11 +48,15 @@ body:
     attributes:
       label: 哪里别扭或出错 / What felt awkward or broke
       description: 哪一步（S0–S7 / W1–W6）、发生了什么 / Which step and what happened
+  - type: textarea
+    id: suggest
+    attributes:
+      label: 建议怎么改（可选）/ Suggested change (optional)
   - type: input
     id: setup
     attributes:
       label: 环境 / Setup
-      description: 例如 Claude Code 版本、干活模型用的什么 / e.g. Claude Code version, which worker model
+      description: Claude Code 版本、执行者和模型、claude-relay 版本（`git -C ~/claude-relay describe --tags --always`）/ Claude Code version, executor and model, claude-relay version
   - type: textarea
     id: scores
     attributes:

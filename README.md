@@ -125,7 +125,17 @@ skill 文件是写给 AI 看的（中文），回复会用你说话的语言。
 
 ## 反馈
 
-用过之后欢迎开一个 [使用反馈 issue](../../issues/new?template=feedback.yml)：用了哪个命令、什么任务、哪里顺、哪里别扭，有打分数据更好。
+这三个 skill 就是靠使用中的反馈一点点改出来的，欢迎告诉我们哪里好用、哪里别扭。两种方式：
+
+- **自己提**：开一个 [使用反馈 issue](../../issues/new?template=feedback.yml)，写用了哪个命令、什么任务、哪里顺、哪里别扭。有打分数据更好。
+- **让 Claude 帮你提**：对 Claude 说"给 relay 提反馈"，它会起草一条反馈给你看，你同意后它才会发出去：装了并登录了 `gh` 时由它直接发，没有的话把内容给你自己贴。
+
+另外，如果一次流程里碰到了 skill 本身的问题（说明写错、脚本报错、流程导致返工），Claude 会在汇报末尾问一句要不要反馈。规则：
+- 顺利的时候不问，同一个 session 最多问一次。
+- 起草时会去掉项目名、路径、代码和 log 原文，发出前一定先给你看完整内容。
+- 回答"不用，别再问了"就永远不再问（会写入 `~/.claude/relay-feedback`，删掉这个文件就能恢复）。
+
+详细规则见 [`skills/relay/references/feedback.md`](skills/relay/references/feedback.md)。
 
 ## License
 

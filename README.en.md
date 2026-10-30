@@ -125,7 +125,17 @@ The skill files are written for the AI (in Chinese); Claude replies in whatever 
 
 ## Feedback
 
-After trying it, please open a [feedback issue](../../issues/new?template=feedback.yml): which command, what task, what went well, what felt awkward — score data especially welcome.
+These skills were shaped by feedback from real use, so please tell us what works and what doesn't. Two ways:
+
+- **Yourself**: open a [feedback issue](../../issues/new?template=feedback.yml) — which command, what task, what went well, what felt awkward. Score data especially welcome.
+- **Let Claude do it**: say "report feedback to relay". Claude drafts the issue and shows it to you, and sends nothing until you approve: with `gh` installed and logged in it posts the issue itself, otherwise it gives you the text to paste.
+
+If a run hits a problem with the skill itself (wrong instructions, a script error, rework caused by the workflow), Claude adds one line at the end of its report offering to file feedback. The rules:
+- No offer when the run went smoothly, and at most one offer per session.
+- Drafts leave out project names, paths, code and raw logs, and you always see the full text before it is sent.
+- Say "no, don't ask again" and it never asks again. This writes `~/.claude/relay-feedback`; delete that file to turn offers back on.
+
+Full rules: [`skills/relay/references/feedback.md`](skills/relay/references/feedback.md).
 
 ## License
 
