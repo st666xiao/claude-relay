@@ -4,6 +4,40 @@
 
 让 Claude Code 里的 **Opus 当总指挥**：它定计划、写任务书和验收脚本；写代码交给"干活模型"，验收交给 Haiku，审查交给 Sonnet。三个命令，三种分工。
 
+## 安装（可以直接把这一节交给 AI 执行）
+
+需要：Claude Code，能用 Opus、Sonnet、Haiku 子代理；macOS 或 Linux，有 `git` 和 `bash`。
+
+**第一次安装：**
+
+```bash
+git clone https://github.com/st666xiao/claude-relay.git ~/claude-relay
+~/claude-relay/install.sh -y
+```
+
+**升级到最新版：**
+
+```bash
+cd ~/claude-relay && git pull && ./install.sh -y
+```
+
+- `-y` 表示不逐个确认，直接覆盖。被覆盖的旧版先备份到 `~/.claude/backups/claude-relay-<时间>/`。不加 `-y` 时，每个已存在的文件都会问一次。
+- 会装到这些位置：`~/.claude/skills/relay`、`~/.claude/skills/relay-os`、`~/.claude/skills/relay-oh`，以及 `~/.claude/agents/` 下的 `haiku-checker.md`、`haiku-worker.md`、`sonnet-reviewer.md`。三个 skill 互相引用，必须一起装。
+- 检查是否装好：`ls ~/.claude/skills/relay/SKILL.md ~/.claude/agents/haiku-checker.md`，两个文件都在就说明装好了。
+- 装完要**新开一个 Claude Code session** 才能用：输入 `/relay 任务描述`、`/relay-os 任务描述` 或 `/relay-oh 任务描述`。
+- 打分记录在 `~/.claude/relay-scores.jsonl`，升级不会动它。
+
+**可选：让 Opus 直接派活给外部模型。** 不装也能用，Opus 会给你一段提示词，你自己粘贴到干活工具里。
+
+| 外部模型 | 先准备好 | 检查命令 |
+|---|---|---|
+| Grok | 装好 Cursor CLI 并登录 | `cursor-agent --list-models` 能列出 grok 模型 |
+| Codex | 装好 Codex CLI，或者 ChatGPT 桌面版自带的那份，并登录 | `codex login status` |
+
+然后在对话里告诉 Opus“可以直接调用 Grok / Codex CLI”。具体用法见 `skills/relay/references/grok.md` 和 `codex.md`。
+
+注意：验收时 Haiku 会运行干活模型写出来的代码和测试，请只在你信任的项目目录里使用。
+
 ## 三种模式
 
 ```mermaid
@@ -76,26 +110,6 @@ xychart-beta
 分数由脚本计算（`skills/relay/scripts/score.py`），记录在 `~/.claude/relay-scores.jsonl`，说一句"看看分数"就能按模型汇总。打分是可选的：说"打分"开启，之后每次自动打分，说"不打分"跳过。
 
 **欢迎把你的 `score.py summary` 结果贴到 issue 里**，样本多了才能真正看出不同模型的差别。
-
-## 安装
-
-```bash
-git clone https://github.com/st666xiao/claude-relay.git
-cd claude-relay
-./install.sh
-```
-
-然后**新开一个 Claude Code session**，输入命令加任务：
-
-```
-/relay-os 修复阅读器翻页卡顿
-```
-
-每个命令开始前，Opus 会先告诉你这个任务适不适合走流程，小任务会建议直接做。
-
-需要：Claude Code（能用 Opus、Sonnet、Haiku 子代理）；`/relay` 还需要一个外部干活模型。三个 skill 互相引用，要一起安装（`install.sh` 会装全）。
-
-注意：验收时 Haiku 会运行干活模型写出来的代码和测试，请只在你信任的项目目录里使用。
 
 ## 仓库里有什么
 

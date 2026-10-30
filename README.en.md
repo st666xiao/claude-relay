@@ -4,6 +4,40 @@
 
 Make **Opus the conductor** inside Claude Code: it plans and writes the task book and acceptance scripts; coding goes to a "worker model", acceptance checks to Haiku, review to Sonnet. Three commands, three ways to split the work.
 
+## Install (you can hand this section straight to an AI agent)
+
+Requires Claude Code with Opus, Sonnet and Haiku subagents; macOS or Linux with `git` and `bash`.
+
+**First install:**
+
+```bash
+git clone https://github.com/st666xiao/claude-relay.git ~/claude-relay
+~/claude-relay/install.sh -y
+```
+
+**Upgrade to the latest version:**
+
+```bash
+cd ~/claude-relay && git pull && ./install.sh -y
+```
+
+- `-y` overwrites without asking. The old copies are backed up to `~/.claude/backups/claude-relay-<time>/` first. Without `-y`, it asks once for each existing file.
+- Installs to `~/.claude/skills/relay`, `~/.claude/skills/relay-os`, `~/.claude/skills/relay-oh`, and `haiku-checker.md`, `haiku-worker.md`, `sonnet-reviewer.md` in `~/.claude/agents/`. The three skills reference each other, so they must be installed together.
+- To check the install: `ls ~/.claude/skills/relay/SKILL.md ~/.claude/agents/haiku-checker.md` should list both files.
+- **Start a new Claude Code session** after installing, then type `/relay <task>`, `/relay-os <task>` or `/relay-oh <task>`.
+- Scores are kept in `~/.claude/relay-scores.jsonl`; upgrading leaves it alone.
+
+**Optional: let Opus dispatch work to external models itself.** Without this, Opus writes a prompt for you to paste into your worker tool.
+
+| Worker | Set up first | Check |
+|---|---|---|
+| Grok | Install the Cursor CLI and log in | `cursor-agent --list-models` lists grok models |
+| Codex | Install the Codex CLI (or use the copy bundled with the ChatGPT desktop app) and log in | `codex login status` |
+
+Then tell Opus in the chat that it may call the Grok / Codex CLI. Details: `skills/relay/references/grok.md` and `codex.md`.
+
+Note: during acceptance Haiku runs the code and tests the worker model wrote, so only use this in project directories you trust.
+
 ## Three modes
 
 ```mermaid
@@ -76,26 +110,6 @@ The final score is high whenever acceptance and review pass, so it tells you whe
 Scores are computed by a script (`skills/relay/scripts/score.py`) and logged to `~/.claude/relay-scores.jsonl`; say "show the scores" to get a per-model summary. Scoring is optional: say "score" to turn it on; after that every run is scored, and "don't score" skips one.
 
 **Please share your `score.py summary` output in an issue** — only with many samples can we really compare models.
-
-## Install
-
-```bash
-git clone https://github.com/st666xiao/claude-relay.git
-cd claude-relay
-./install.sh
-```
-
-Then **start a new Claude Code session** and type a command plus your task:
-
-```
-/relay-os fix the reader's page-turn stutter
-```
-
-Before starting, Opus tells you whether the task fits the workflow at all, and suggests doing small tasks directly.
-
-Requires Claude Code with Opus, Sonnet and Haiku subagents; `/relay` also needs an external worker model. The three skills reference each other, so install them together (`install.sh` does).
-
-Note: during acceptance Haiku runs the code and tests the worker model wrote, so only use this in project directories you trust.
 
 ## What's inside
 
